@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+   <header>
+    
+    <style>
+       .sneck {
+       
+  width: 400px;
+  height: 200px;
+  padding: 20px;
+  margin: 50px auto;
+  background: yellow;
+   position:absolute;
+           opacity: 0.5;
+ left: 600px;
+  top: 150px;
+           
+
+}
+        .locator {
+  
+        
+
+            
+}
+       
+       
+       </style>
+    
+    
+    </header> 
+    <p id="dog">Example: <i>italic</i> and <b>bold</b></p>
+
+
+    <div class="locator" id="boxoutline"></div>
+    <div class='underline'></div>
+    <div contenteditable="true" class="sneck" id="foo">TESTING many many words  <a id='foo'>alot</a>the words in the content Editable</div>
+    
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    
+<script>
+    
+    $(document).ready(function(){
+    //getCoordinates('.sneck','.locator')
+         
+    //$('.locator').css({ "color": "red"})
+        
+        
+
+    
+    
+        
+        
+    });
+        
+    
+       function getCoordinates(targetSelector,arrow){
+    
+    var elem = document.querySelector(targetSelector);
+        console.log(elem);
+    let compStyles=window.getComputedStyle(elem);
+           console.log("my font size is "+ compStyles.getPropertyValue('font-size') +
+    ',\nand my computed line-height is ' +
+    compStyles.getPropertyValue('line-height'))
+           
+           
+           range = document.createRange();
+range.selectNode(document.getElementsByTagName("div").item(0));
+rectList = range.getClientRects();
+           
+           console.log('The rect list' +rectList[0]);
+           
+        //console.log(elem);
+let rect = elem.getBoundingClientRect();
+        
+for (var key in rect) {
+  if(typeof rect[key] !== 'function') {
+    let para = document.createElement('p');
+    para.textContent  = `${ key } : ${ rect[key] }`;
+    document.body.appendChild(para);
+      
+         
+      
+
+      
+      
+    
+      var padding = compStyles.getPropertyValue('padding-left') 
+      var bottom=+rect.bottom+"px"
+      var height= 16 +"px"
+      var left=rect.left+20+"px"
+      var right=rect.right+'px'
+      var top=rect.top+20+"px"
+      var width=16+"px"
+      var opacity=.6+''
+      var background="red"
+      var position='absolute'
+      
+      $(arrow).css({"bottom": bottom,"height": height,'left':left,"right":right,"top":top,"width":width,"opacity":opacity, "background": "red","position":position});
+      console.log("padding is "+padding);
+      
+  }
+}
+   }
+    function selectElementContents(el) {
+    var range = document.createRange();
+        //my code
+        
+        startNode=el.firstChild;
+        
+        
+        
+        
+        console.log(startNode);
+        endNode=el.lastChild;
+                    
+        range.setStart(startNode,0);
+        range.setEnd(endNode,1);
+        
+        //
+        
+    range.selectNodeContents(el);
+        //my code uncomment above
+       //range.selectNode(el);
+        
+    
+        //my code
+        
+        rectList = range.getClientRects();
+        
+           
+        rect=rectList[1];
+       
+  
+     
+      var bottom=+rect.bottom+"px"
+      var height= rect.height +"px"
+      var left=rect.left+"px"
+      var right=rect.right+'px'
+      var top=rect.top+"px"
+      var width=rect.width+"px"
+      var opacity=.6+''
+      var background="red"
+      var position='absolute'
+      
+      $('.locator').css({"bottom": bottom,"height": height,'left':left,"right":right,"top":top,"width":width,"opacity":opacity, "background": "red","position":position});
+      
+        
+        
+   
+        
+        
+        
+}
+    
+
+var el = document.getElementById("foo");
+selectElementContents(el);
+
+  
+    
+    </script>
+</html> 
+
