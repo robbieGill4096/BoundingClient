@@ -1,0 +1,63 @@
+
+
+<!DOCTYPE html>
+<html>
+<header>
+<style>
+	.box{
+    	bottom:101px;
+        height:17px;
+        left:124.73px;
+        right:201px;
+        top:84px;
+        width: 76.73px;
+        
+        
+       
+  		background: red;
+   		position:absolute;
+      	opacity: 0.5;
+ 		
+    }
+
+</style>
+
+</header>
+<body>
+
+<div id="div1">
+<p id="p1">This is a paragraph.</p>
+<p id="p2">This is another paragraph.</p>
+</div>
+<div class="box"></div>
+<div contenteditable="true" id="textbox">ddddd</div>
+
+<script>
+var para = document.createElement("p");
+var node = document.createTextNode("This is new.");
+var node2 = document.createTextNode("This is new.");
+var node3 = document.createTextNode("This is new.");
+var node4 = document.createTextNode("This is new.");
+para.appendChild(node);
+document.getElementById('textbox').appendChild(node);
+document.getElementById('textbox').appendChild(node2);
+document.getElementById('textbox').appendChild(node3);
+document.getElementById('textbox').appendChild(node4);
+
+var element = document.getElementById("div1");
+var child = document.getElementById("p1");
+element.insertBefore(para,child);
+var range = document.createRange();
+range.selectNodeContents(document.getElementById('textbox'));
+
+rectList=range.getClientRects();
+rect=rectList[3];
+console.log(rectList[0]);
+console.log(rectList[1]);
+console.log(rectList[2]);
+
+
+</script>
+
+</body>
+</html>
