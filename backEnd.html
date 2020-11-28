@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+
+<header>
+    <script type="text/javascript" src="extensionEngine.js"></script>
+</header>
+
+
+<documentBody>
+
+    <div contenteditable='true' id='outgoingMessage' style=></div>
+
+</documentBody>
+
+
+
+<kidSpell>
+    <h3></h3>
+</kidSpell>
+<kidSpell id='buttonPanel'>
+
+    <p>this is my paragraph</p>
+    <div></div>
+
+
+</kidSpell>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+
+<script>
+    let elem = document.querySelector('#underline');
+    let rect = elem.getBoundingClientRect();
+    for (var key in rect) {
+        if (typeof rect[key] !== 'function') {
+            let para = document.createElement('p');
+            para.textContent = `${ key } : ${ rect[key] }`;
+            document.body.appendChild(para);
+        }
+    }
+</script>
+
+
+
+
+
+<script>
+    retrieveMisspelledWords('ciggs');
+
+
+
+    function singleWordPasser(wordArr) {
+
+
+        var Data = JSON.parse(wordArr);
+
+        for (var x in Data.suggestions) {
+
+            //console.log(x);//original word
+
+            addSuggestionButton(Data.suggestions[x], 'buttonPanel'); //suggestions
+
+
+        }
+    }
+
+
+    function retrieveMisspelledWords(misspelledWord) {
+
+        fetch('https://cast.boisestate.edu/test/splchk.php?word=' + misspelledWord + '&max=5')
+            .then(res => res.text()) // your code// your code
+            .then(data => singleWordPasser(data))
+
+    };
+
+
+
+    function createSuggestionBox(misspelledWord) {
+
+
+
+
+    };
+
+
+
+
+    <!--@param suggestion: word suggested by the kidspell api as a alternative to the misspelling 
+
+    -->
+    function addSuggestionButton(suggestion, panel) {
+        //create a new button take array value of suggestion and count 
+        //create a listener for that button 
+
+        $(document).ready(function() {
+            var text = suggestion;
+            //button is added to the end of the buttonPanel 
+            var panelclass = '#' + panel + ''
+
+            $(panelclass).append("<div id='button' class='suggestionButton'><button>" + text + "</button></div>");
+
+
+        });
+    }
+
+
+    //check if the user has clicked into a content editable textbox on the page.
+    $('*').click(function(e) {
+        var attr = $(e.currentTarget).attr('contenteditable');
+        if (typeof attr !== typeof undefined && attr !== false) {
+            if ($(this).keyup(function() {
+
+
+                    //retrieve text from user
+
+
+                    if ((e.currentTarget.innerHTML === "") == false) {
+
+                        fetch('https://cast.boisestate.edu/test/splchk.php?sentence=' + e.currentTarget.innerHTML + '&sugs=true&max=1')
+                            .then(res => res.text()) // your code// your code
+                            .then(data => sentencePasser(data))
+
+                    }
+
+
+
+
+                }));
+
+        }
+
+
+
+
+    });
+
+    //checkParagraph for missspellings and create a div for each one
+    function sentencePasser(arrVal) {
+        console.clear();
+        var Data = JSON.parse(arrVal);
+
+        for (var x in Data) {
+            if (Data.hasOwnProperty(x)) {
+                console.log(x); //original word
+                console.log(Data[x]); //suggestions
+
+            }
+        }
+
+
+
+    };
+
+    $("#underline").on("mouseover", function() {
+        //retrieve suggestions for this specic word
+        //feed suggestions into suggestion box which creates a respective number of buttons 
+
+        alert($(this).text()
+
+
+        );
+    });
+</script>
