@@ -3,7 +3,7 @@
 <header>
 
     <style>
-        .sneck {
+        .contentEditableCSS {
             width: 400px;
             height: 200px;
             padding: 20px;
@@ -14,39 +14,27 @@
             left: 600px;
             top: 150px;
         }
-        .wordBox{
-           width: 34.65px;
+        .TestCoordinates{
+           width: 1px;
             height: 16px;
             padding: 0px;
             margin: 50px auto;
             background: red;
             position: absolute;
             opacity: 0.5;
-            left: 620px;
+            left: 639px;
             top: 170px; 
         }
-        .dymo1{
-           width: 34.65px;
-            height: 16px;
-            padding: 0px;
-            margin: 50px auto;
-            background: green;
-            position: absolute;
-            opacity: 0.5;
-            left: 620px;
-            top: 170px; 
-        }
-        .locator {}
+        
     </style>
 
 
 </header>
-<p id="dog">Example: <i>italic</i> and <b>bold</b></p>
-<div class="wordBox"></div>
+<!--<div class="TestCoordinates"></div> -->
 
 <div class="locator" id="boxoutline"></div>
-<div class='underline'></div>
-<div contenteditable="true" class="sneck" id="foo">ashes to ashes</div>
+
+<div contenteditable="true" class="contentEditableCSS" id="foo">D D D D D D D D  D D D D D D </div>
 
 <body>
   <div id="div1">The text above has been created dynamically.</div>
@@ -56,48 +44,42 @@
 
 <script>
     $(document).ready(function() {
-       // getCoordinates('.sneck','.locator')
-
-        //$('.locator').css({ "color": "red"})
-
-
-
-
+       // getCoordinates()
+        var TextBox=createTextBoxObject('foo');
+        var wordList =[]
+        wordList= createWordObjectList('foo');
+        
+        createUnderlineDivAt(TextBox,wordList);
+        console.log('shouldprint');
+    //createUnderline(wordList[0]);
+    //createUnderline(wordList[1]);
+    //createUnderline(wordList[2]);
+    //createUnderline(wordList[3]);
+    //createUnderline(wordList[4]);
+    //var el = document.getElementById("foo");
+    //selectElementContents(el);
     });
+    
+    function createTextBoxObject(id) {
 
+        var elem = document.getElementById(id);
 
-    function getCoordinates(targetSelector, arrow) {
-
-        var elem = document.querySelector(targetSelector);
-        console.log(elem);
         let compStyles = window.getComputedStyle(elem);
-        console.log("my font size is " + compStyles.getPropertyValue('font-size') +
-            ',\nand my computed line-height is ' +
-            compStyles.getPropertyValue('line-height'))
-
 
         range = document.createRange();
         range.selectNode(document.getElementsByTagName("div").item(0));
         rectList = range.getClientRects();
 
-        console.log('The rect list' + rectList[0]);
-
-        //console.log(elem);
         let rect = elem.getBoundingClientRect();
-        console.log(rect);
+        return rect;
         
-        
-        for (var key in rect) {
-            if (typeof rect[key] !== 'function') {
-                let para = document.createElement('p');
-                para.textContent = `${ key } : ${ rect[key] }`;
-                document.body.appendChild(para);
+            /*
+             var textBoxObject = {BoxHeight:rect.height,BoxWidth:rect.width,BoxBottom:bottom,BoxLeft:rect.left,BoxRight:rect.right,BoxTop:rect.top,BoxX:rect.x,BoxY:rect.y,BoxPaddingLeft:compStyles.getPropertyValue('padding-left'),BoxPosition:rect.position}
+       */
 
-
-
-
+        /*
                 var padding = compStyles.getPropertyValue('padding-left')
-                var bottom = +rect.bottom + "px"
+                var bottom = +rect.bottom
                 var height = 16 + "px"
                 var left = rect.left + 20 + "px"
                 var right = rect.right + 'px'
@@ -106,81 +88,10 @@
                 var opacity = .6 + ''
                 var background = "red"
                 var position = 'absolute'
-
-                $(arrow).css({
-                    "bottom": bottom,
-                    "height": height,
-                    'left': left,
-                    "right": right,
-                    "top": top,
-                    "width": width,
-                    "opacity": opacity,
-                    "background": "red",
-                    "position": position
-                });
-                console.log("padding is " + padding);
-
+                */
             }
-        }
-    }
-
-    function selectElementContents(el) {
-        var range = document.createRange();
-        //my code
-
-        startNode = el.firstChild;
-
-
-
-
-        //console.log(startNode);
-        endNode = el.lastChild;
-
-        range.setStart(startNode, 0);
-        range.setEnd(endNode, 1);
-
-        //
-
-        range.selectNodeContents(el);
-        //my code uncomment above
-        //range.selectNode(el);
-
-
-        //my code
-
-        rectList = range.getClientRects();
-
         
-        rect = rectList[1];
-
-
-        /*
-        var bottom = +rect.bottom + "px"
-        var height = rect.height + "px"
-        var left = rect.left + "px"
-        var right = rect.right + 'px'
-        var top = rect.top + "px"
-        var width = rect.width + "px"
-        var opacity = .6 + ''
-        var background = "red"
-        var position = 'absolute'
-
-        $('.boxoutline').css({
-            "bottom": bottom,
-            "height": height,
-            'left': left,
-            "right": right,
-            "top": top,
-            "width": width,
-            "opacity": opacity,
-            "background": "red",
-            "position": position
-        });
-
-
-*/
-
-    }
+  
     function get_text_width(txt, font) {
     this.element = document.createElement('canvas');
     this.context = this.element.getContext("2d");
@@ -188,12 +99,10 @@
         
     return this.context.measureText(txt).width;
     }
-//$("#calculated").html('Calculated width ' + get_tex_width("TEST", "30px Arial"));
-//console.log('Calculated width ' + get_tex_width("TESTING", "30px Arial"));
     
     
     //returns a list of words with widths and heights.
-    function wrapText(id) {
+    function createWordObjectList(id) {
         //get outer box dimensions
         //var TextboxWidth=$('foo')
         //var TextboxHeight=
@@ -202,14 +111,14 @@
         //for each word calculate its size
         
         
-        let compStyles = window.getComputedStyle(document.getElementById('foo'));
+        let compStyles = window.getComputedStyle(document.getElementById(id));
         
         
-        var wordHeight = compStyles.getPropertyValue('line-height')+'';
-        var wordFontSize=compStyles.getPropertyValue('font-size')+'';
+        let wordHeight = compStyles.getPropertyValue('line-height')+'';
+        let wordFontSize=compStyles.getPropertyValue('font-size')+'';
         
     
-        var list = (document.getElementById('foo').innerHTML).split(" ");
+        let list = (document.getElementById(id).innerHTML).split(" ");
         
         
         
@@ -218,21 +127,21 @@
         for (i=0;i<list.length;i++)
         {
             //console.log(list[i]);
-            var textDim = wordFontSize +" "+wordHeight;
+            let textDim = wordFontSize +" "+wordHeight;
             
             //console.log('Calculated width ' + get_text_width(list[i],textDim));
             
             textStr=list[i]+'';
            
-            
-            var wordObject = {text:textStr,height:wordFontSize,width:get_text_width(list[i],textDim)}
+          
+            let wordObject = {text:textStr,height:wordFontSize,width:get_text_width(list[i],textDim),split_width:get_text_width(" ",textDim)}
         
            // console.log(wordObject.text);
             wordObjectList[i]=(wordObject);
-            console.log(wordObject.height);
-            console.log(wordObjectList[i].text);
-            console.log(wordObjectList[i].width);
-            console.log(textDim);
+            //console.log(wordObject.height);
+            //console.log(wordObjectList[i].text);
+           // console.log(wordObjectList[i].width);
+            //console.log(textDim);
             
             
            
@@ -249,69 +158,65 @@
 
     }
     
-    function createUnderline(wordObject){
+    function createUnderlineDivAt(textBoxObject,wordObjectList){
+    
+        let currentWidth=0;
+        let currentRow=0;
+      
         
+        let MaxWidth=textBoxObject.width;
+        let MaxHeight=textBoxObject.height;
+        let wordCount=0;
+        //margins - 20 for current top 50-20 = 30 so top -30
         
+        let currentTop = textBoxObject.top-30;
+        var currentLeft = textBoxObject.left+20;
+      console.log("the current top is " +currentTop);
+    for(i=0;i<wordObjectList.length;i++){
         
-            //create div
-         
-           //console.log("THe word is "+wordObject.text);
+        if (typeof wordObjectList[i] === 'undefined'){
+            
+            console.log("UNDEFINED");
+        }
+       
+       
+        let wordObject = wordObjectList[i];
             
         
+       
+      
+        //console.log("current width is "+currentWidth);
+        console.log(wordObject.text);
+        console.log(currentWidth);
+        if(currentWidth+wordObject.width>=textBoxObject.width-90){
+            console.log('currentWidth is larger');
         
-    }
-    //
-    function createDiv(wordObject){
-        var num=1;
-        const newDiv=document.createElement("div");
-        newDiv.id='misspell'+num;
-        
-        newDiv.className='dymo1';
-        //newDiv.width= '34.65px';
-        //newDiv.height='40px';
-        //newDiv.color="red";
-            /*newDiv.height='16px';
-            newDiv.padding='0px';
-            newDiv.margin='50px auto';
-            newDiv.background='green';
-            newDiv.position='absolute';
-            newDiv.opacity='0.5';
-            newDiv.left='690px';
-            newDiv.top='170px'; */
-        const newContent = document.createTextNode("Hi there and greetings!"); 
+           //currentRow+=1;
+            currentTop+=20;
+            currentWidth=0;
+            currentLeft=textBoxObject.left+20;
+            
+            
+        //console.log(currentRow);
+        }
+            currentWidth+=wordObject.width;
         
         
-  // add the text node to the newly created div
-  newDiv.appendChild(newContent); 
+       // console.log('width: '+ wordObject.width);
+         $("<style type='text/css'> .misSpell"+i+"{ width: "+ wordObject.width+ "px;height: 16px;padding: 0px;margin: 50px auto;background: red;position: absolute;opacity: 0.5;left: "+currentLeft+"px;top:"+currentTop+"px; } </style>").appendTo("head");
+    $("<div/>").addClass("misSpell" +i).appendTo("body");
+        currentLeft+=wordObject.width+4;
+        //console.log("current left" +currentLeft);
+        //console.log("textBox left" + textBoxObject.left);
+        //$("<style type='text/css'> .misSpell"+i+"{ width: "+ wordObject.width+ "px;height: 16px;padding: 0px;margin: 50px auto;background: red;position: absolute;opacity: 0.5;left: "+currentLeft+"px;top:"+currentTop+"px; } </style>").appendTo("head");
+   // $("<div/>").addClass("misSpell" +i).appendTo("body");
         
-        
-        return newDiv;
-        
-        //const currentDiv = document.getElementById("div1"); 
-  //document.body.insertBefore(newDiv, currentDiv); 
-        
+    
         
     }
     
-    var wordList = wrapText('#foo');
-    for(i=0;i<wordList.length;i++){
     }
-   
-    const currentDiv = document.getElementById("foo"); 
-    document.body.insertBefore(createDiv('1'),currentDiv);
-    //$('misspell1').css({"color": 'red',"height": '10px',"width": '10px',"background": "red"});
-   
-    console.log(wordList[0]);
-    //create new css class on fly
-    $("<style type='text/css'> .redbold{ color:#f00; font-weight:bold;} </style>").appendTo("head");
-$("<div/>").addClass("redbold").text("SOME NEW TEXT").appendTo("body");
-    createUnderline(wordList[0]);
-    createUnderline(wordList[1]);
-    createUnderline(wordList[2]);
-    createUnderline(wordList[3]);
-    createUnderline(wordList[4]);
-    var el = document.getElementById("foo");
-    selectElementContents(el);
+    
 </script>
 
 </html>
