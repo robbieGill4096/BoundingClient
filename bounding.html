@@ -7,10 +7,10 @@
             width: 400px;
             height: 200px;
             padding: 20px;
-            margin: 50px auto;
-            background: yellow;
+            margin: 50px 10px;
+            background: white;
             position: absolute;
-            opacity: 0.5;
+            opacity: 1;
             left: 600px;
             top: 150px;
         }
@@ -34,22 +34,34 @@
 
 <div class="locator" id="boxoutline"></div>
 
-<div contenteditable="true" class="contentEditableCSS" id="foo">D D D D D D D D  D D D D D D </div>
+<div contenteditable="true" class="contentEditableCSS" id="foo">THIS IS MY FIRST Test WOrd I am Writing
+    </div>
 
 <body>
-  <div id="div1">The text above has been created dynamically.</div>
+ 
 </body>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 <script>
+    /*
+    cosiderations
+    single word is larger than the width of the text box
+    new line character is inputed
+    extra spaces between words 
+    trailing white spaces
+    */
     $(document).ready(function() {
        // getCoordinates()
         var TextBox=createTextBoxObject('foo');
         var wordList =[]
         wordList= createWordObjectList('foo');
         
-        createUnderlineDivAt(TextBox,wordList);
+         let compStyles = window.getComputedStyle(document.getElementById('foo'));
+        console.log("the margins are "+ compStyles.getPropertyValue('margin'));
+        
+        
+        createUnderlineDivAt(TextBox,wordList,compStyles.getPropertyValue('padding'));
         console.log('shouldprint');
     //createUnderline(wordList[0]);
     //createUnderline(wordList[1]);
@@ -64,10 +76,12 @@
 
         var elem = document.getElementById(id);
 
-        let compStyles = window.getComputedStyle(elem);
+        //let compStyles = window.getComputedStyle(elem);
+        //(compStyles.getPropertyValue('padding'));
 
         range = document.createRange();
-        range.selectNode(document.getElementsByTagName("div").item(0));
+        //console.log(elem.firstChild);
+        range.selectNode(elem.firstChild);
         rectList = range.getClientRects();
 
         let rect = elem.getBoundingClientRect();
@@ -118,7 +132,7 @@
         let wordFontSize=compStyles.getPropertyValue('font-size')+'';
         
     
-        let list = (document.getElementById(id).innerHTML).split(" ");
+        let list = (document.getElementById(id).innerHTML).split(/\s+/);
         
         
         
@@ -158,58 +172,67 @@
 
     }
     
-    function createUnderlineDivAt(textBoxObject,wordObjectList){
+    function createUnderlineDivAt(textBoxObject,wordObjectList,padding){
     
         let currentWidth=0;
         let currentRow=0;
       
         
-        let MaxWidth=textBoxObject.width;
+        
         let MaxHeight=textBoxObject.height;
         let wordCount=0;
         //margins - 20 for current top 50-20 = 30 so top -30
         
-        let currentTop = textBoxObject.top-30;
-        var currentLeft = textBoxObject.left+20;
-      console.log("the current top is " +currentTop);
+        
+        let currentTop = textBoxObject.top;
+        var currentLeft = textBoxObject.left;
+        var originPointX=currentLeft;
+        
+        var width=textBoxObject.width;
+       
+        
+         
+        
+        var margin=50;
+        var padding=18*2;
+        const paddingCons=18;
+        const MaxWidth=(originPointX+(textBoxObject.width-paddingCons));
     for(i=0;i<wordObjectList.length;i++){
-        
-        if (typeof wordObjectList[i] === 'undefined'){
-            
-            console.log("UNDEFINED");
-        }
-       
-       
-        let wordObject = wordObjectList[i];
-            
-        
-       
       
-        //console.log("current width is "+currentWidth);
-        console.log(wordObject.text);
-        console.log(currentWidth);
-        if(currentWidth+wordObject.width>=textBoxObject.width-90){
-            console.log('currentWidth is larger');
         
-           //currentRow+=1;
-            currentTop+=20;
-            currentWidth=0;
-            currentLeft=textBoxObject.left+20;
+        
+        
+     var  wordObject=wordObjectList[i];
+        
+        
+        
+        //margin is 20 
+       // console.log("currentLeftpluswordObject"+(currentLeft+wordObject.width));
+        // console.log("origin+width"+(originPointX+textBoxObject.width));
+        if((currentLeft+wordObject.width+paddingCons)>(MaxWidth)){
+           console.log("currentLeft size is:"+ currentLeft+wordObject.width+paddingCons)
+            console.log("furthestPoint TextSHouldGo:"+ MaxWidth);
+            console.log("The word objects text is:"+wordObject.text);
             
+            currentLeft=originPointX;
             
-        //console.log(currentRow);
-        }
-            currentWidth+=wordObject.width;
-        
-        
-       // console.log('width: '+ wordObject.width);
-         $("<style type='text/css'> .misSpell"+i+"{ width: "+ wordObject.width+ "px;height: 16px;padding: 0px;margin: 50px auto;background: red;position: absolute;opacity: 0.5;left: "+currentLeft+"px;top:"+currentTop+"px; } </style>").appendTo("head");
+           padding+=18;
+            
+           }
+           //need to detect newline character and increment next row if so
+        //try spillitng on newline charcter
+               
+        //console.log('width: '+ wordObject.width);
+         $("<style type='text/css'> .misSpell"+i+"{ width: "+ wordObject.width+ "px;height: 3px;padding: 0px;margin: "+margin+"px auto;background: red;position: absolute;opacity: 0.5;left: "+(currentLeft+20)+"px;top:"+(currentTop-margin+padding)+"px; } </style>").appendTo("head");
     $("<div/>").addClass("misSpell" +i).appendTo("body");
-        currentLeft+=wordObject.width+4;
-        //console.log("current left" +currentLeft);
-        //console.log("textBox left" + textBoxObject.left);
-        //$("<style type='text/css'> .misSpell"+i+"{ width: "+ wordObject.width+ "px;height: 16px;padding: 0px;margin: 50px auto;background: red;position: absolute;opacity: 0.5;left: "+currentLeft+"px;top:"+currentTop+"px; } </style>").appendTo("head");
-   // $("<div/>").addClass("misSpell" +i).appendTo("body");
+        
+        //increment left
+        if((i+1 <wordObjectList.length)== true){
+        currentLeft+=4
+        }
+        currentLeft+=wordObject.width;
+           
+    
         
     
         
