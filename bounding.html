@@ -4,7 +4,7 @@
 
     <style>
         .contentEditableCSS {
-            width: 400px;
+            width: 200px;
             height: 200px;
             padding: 20px;
             margin: 50px 10px;
@@ -14,8 +14,9 @@
             left: 600px;
             top: 150px;
         }
-        .TestCoordinates{
-           width: 1px;
+        
+        .TestCoordinates {
+            width: 1px;
             height: 16px;
             padding: 0px;
             margin: 50px auto;
@@ -23,9 +24,8 @@
             position: absolute;
             opacity: 0.5;
             left: 639px;
-            top: 170px; 
+            top: 170px;
         }
-        
     </style>
 
 
@@ -34,87 +34,68 @@
 
 <div class="locator" id="boxoutline"></div>
 
-<div contenteditable="true" class="contentEditableCSS" id="foo">THIS IS MY FIRST Test WOrd I am Writing
-    </div>
+<div contenteditable="true" class="contentEditableCSS" id="foo">Go ask Alice</div>
 
 <body>
- 
+
 </body>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 <script>
     /*
-    cosiderations
-    single word is larger than the width of the text box
-    new line character is inputed
-    extra spaces between words 
-    trailing white spaces
-    */
+        cosiderations
+        single word is larger than the width of the text box
+        new line character is inputed
+        extra spaces between words 
+        trailing white spaces
+        */
     $(document).ready(function() {
-       // getCoordinates()
-        var TextBox=createTextBoxObject('foo');
-        var wordList =[]
-        wordList= createWordObjectList('foo');
+        // getCoordinates()
+$('*').click(function(e) {
         
-         let compStyles = window.getComputedStyle(document.getElementById('foo'));
-        console.log("the margins are "+ compStyles.getPropertyValue('margin'));
+        var TextBox = createTextBoxObject('foo');
+        var wordList = []
+        wordList = createWordObjectList('foo');
+
+        let compStyles = window.getComputedStyle(document.getElementById('foo'));
+
+
+
+        createUnderlineDivAt(TextBox, wordList, compStyles.getPropertyValue('padding'));
         
-        
-        createUnderlineDivAt(TextBox,wordList,compStyles.getPropertyValue('padding'));
-        console.log('shouldprint');
-    //createUnderline(wordList[0]);
-    //createUnderline(wordList[1]);
-    //createUnderline(wordList[2]);
-    //createUnderline(wordList[3]);
-    //createUnderline(wordList[4]);
-    //var el = document.getElementById("foo");
-    //selectElementContents(el);
+
     });
     
+    
+    });
+
     function createTextBoxObject(id) {
 
-        var elem = document.getElementById(id);
+        let elem = document.getElementById(id);
 
-        //let compStyles = window.getComputedStyle(elem);
-        //(compStyles.getPropertyValue('padding'));
+
 
         range = document.createRange();
         //console.log(elem.firstChild);
-        range.selectNode(elem.firstChild);
+        range.selectNode(elem);
         rectList = range.getClientRects();
 
         let rect = elem.getBoundingClientRect();
+        addFocusIndicator(rect);
         return rect;
-        
-            /*
-             var textBoxObject = {BoxHeight:rect.height,BoxWidth:rect.width,BoxBottom:bottom,BoxLeft:rect.left,BoxRight:rect.right,BoxTop:rect.top,BoxX:rect.x,BoxY:rect.y,BoxPaddingLeft:compStyles.getPropertyValue('padding-left'),BoxPosition:rect.position}
-       */
-
-        /*
-                var padding = compStyles.getPropertyValue('padding-left')
-                var bottom = +rect.bottom
-                var height = 16 + "px"
-                var left = rect.left + 20 + "px"
-                var right = rect.right + 'px'
-                var top = rect.top + 20 + "px"
-                var width = 16 + "px"
-                var opacity = .6 + ''
-                var background = "red"
-                var position = 'absolute'
-                */
-            }
-        
-  
-    function get_text_width(txt, font) {
-    this.element = document.createElement('canvas');
-    this.context = this.element.getContext("2d");
-    this.context.font = font;
-        
-    return this.context.measureText(txt).width;
     }
-    
-    
+
+
+    function get_text_width(txt, font) {
+        this.element = document.createElement('canvas');
+        this.context = this.element.getContext("2d");
+        this.context.font = font;
+
+        return this.context.measureText(txt).width;
+    }
+
+
     //returns a list of words with widths and heights.
     function createWordObjectList(id) {
         //get outer box dimensions
@@ -123,122 +104,139 @@
         //get padding
         //split words on " "
         //for each word calculate its size
-        
-        
-        let compStyles = window.getComputedStyle(document.getElementById(id));
-        
-        
-        let wordHeight = compStyles.getPropertyValue('line-height')+'';
-        let wordFontSize=compStyles.getPropertyValue('font-size')+'';
-        
-    
-        let list = (document.getElementById(id).innerHTML).split(/\s+/);
-        
-        
-        
-        
-        let wordObjectList=[];
-        for (i=0;i<list.length;i++)
-        {
-            //console.log(list[i]);
-            let textDim = wordFontSize +" "+wordHeight;
-            
-            //console.log('Calculated width ' + get_text_width(list[i],textDim));
-            
-            textStr=list[i]+'';
-           
-          
-            let wordObject = {text:textStr,height:wordFontSize,width:get_text_width(list[i],textDim),split_width:get_text_width(" ",textDim)}
-        
-           // console.log(wordObject.text);
-            wordObjectList[i]=(wordObject);
-            //console.log(wordObject.height);
-            //console.log(wordObjectList[i].text);
-           // console.log(wordObjectList[i].width);
-            //console.log(textDim);
-            
-            
-           
-           // console.log(wordObjectList[0].text);
-        }
-            
-        
-            return wordObjectList;                               
-        
 
-        
-        
+
+        let compStyles = window.getComputedStyle(document.getElementById(id));
+
+
+        let wordHeight = compStyles.getPropertyValue('line-height') + '';
+        let wordFontSize = compStyles.getPropertyValue('font-size') + '';
+
+
+        let list = (document.getElementById(id).innerHTML).split(/\s+/);
+
+
+
+
+        let wordObjectList = [];
+        for (i = 0; i < list.length; i++) {
+            let textDim = wordFontSize + " " + wordHeight;
+
+
+
+            textStr = list[i] + '';
+
+
+            let wordObject = {
+                text: textStr,
+                height: wordFontSize,
+                width: get_text_width(list[i], textDim),
+                split_width: get_text_width(" ", textDim)
+            }
+
+            wordObjectList[i] = (wordObject);
+        }
+
+        return wordObjectList;
+
+
 
 
     }
-    
-    function createUnderlineDivAt(textBoxObject,wordObjectList,padding){
-    
-        let currentWidth=0;
-        let currentRow=0;
-      
-        
-        
-        let MaxHeight=textBoxObject.height;
-        let wordCount=0;
+
+    function createUnderlineDivAt(textBoxObject, wordObjectList, padding) {
+
+        let currentWidth = 0;
+        let currentRow = 0;
+
+
+
+        let MaxHeight = textBoxObject.height;
+        let wordCount = 0;
         //margins - 20 for current top 50-20 = 30 so top -30
-        
-        
+
+
         let currentTop = textBoxObject.top;
         var currentLeft = textBoxObject.left;
-        var originPointX=currentLeft;
-        
-        var width=textBoxObject.width;
-       
-        
-         
-        
-        var margin=50;
-        var padding=18*2;
-        const paddingCons=18;
-        const MaxWidth=(originPointX+(textBoxObject.width-paddingCons));
-    for(i=0;i<wordObjectList.length;i++){
-      
-        
-        
-        
-     var  wordObject=wordObjectList[i];
-        
-        
-        
-        //margin is 20 
-       // console.log("currentLeftpluswordObject"+(currentLeft+wordObject.width));
-        // console.log("origin+width"+(originPointX+textBoxObject.width));
-        if((currentLeft+wordObject.width+paddingCons)>(MaxWidth)){
-           console.log("currentLeft size is:"+ currentLeft+wordObject.width+paddingCons)
-            console.log("furthestPoint TextSHouldGo:"+ MaxWidth);
-            console.log("The word objects text is:"+wordObject.text);
+        var originPointX = currentLeft;
+
+        var width = textBoxObject.width;
+
+
+
+
+        var margin = 50;
+        var padding = 18 * 2;
+        const paddingCons = 18;
+        const MaxWidth = (originPointX + (textBoxObject.width - paddingCons));
+        for (i = 0; i < wordObjectList.length; i++) {
+
+
+
+
+            let wordObject = wordObjectList[i];
+
+
+
+            //margin is 20 
+
+            if ((currentLeft + wordObject.width + paddingCons) > (MaxWidth)) {
+                //console.log("currentLeft size is:"+ currentLeft+wordObject.width+paddingCons)
+                // console.log("furthestPoint TextSHouldGo:"+ MaxWidth);
+                console.log("The word objects text is:" + wordObject.text);
+
+                currentLeft = originPointX;
+
+                padding += 18;
+
+            }
+            //need to detect newline character and increment next row if so
+            //try spillitng on newline charcter
+
             
-            currentLeft=originPointX;
+            //if(checkforMistake(wordObject.text) == true){
+            $("<style type='text/css'> .misSpell" + i + "{ width: " + wordObject.width + "px;height: 3px;padding: 0px;margin: " + margin + "px auto;background: red;position: absolute;opacity: 0.5;left: " + (currentLeft + 20) + "px;top:" + (currentTop - margin + padding) + "px; } </style>").appendTo("head");
+            $("<div/>").addClass("misSpell" + i).appendTo("body");
+
+            $('.misSpell' + i).on('mouseover', function() {
+                console.log(wordObject.text);
+                
+                
+            });
             
-           padding+=18;
-            
-           }
-           //need to detect newline character and increment next row if so
-        //try spillitng on newline charcter
-               
-        //console.log('width: '+ wordObject.width);
-         $("<style type='text/css'> .misSpell"+i+"{ width: "+ wordObject.width+ "px;height: 3px;padding: 0px;margin: "+margin+"px auto;background: red;position: absolute;opacity: 0.5;left: "+(currentLeft+20)+"px;top:"+(currentTop-margin+padding)+"px; } </style>").appendTo("head");
-    $("<div/>").addClass("misSpell" +i).appendTo("body");
-        
-        //increment left
-        if((i+1 <wordObjectList.length)== true){
-        currentLeft+=4
+            //increment left
+            if ((i + 1 < wordObjectList.length) == true) {
+                currentLeft += 4
+            }
+            currentLeft += wordObject.width;
+
+
         }
-        currentLeft+=wordObject.width;
-           
+
+    }
+    /*
+    @param numberToRemove-Indicates The largest sequence of underlined words you want to remove 
+    */
+ 
     
+    
+    function removeUnderlines(numberToRemove){
         
-    
+        for(i=0;i<numberToRemove;i++){
+            
+            $(".misSpell"+i).remove();
+        }
+        
+        
+    }
+    function addFocusIndicator(TextBoxObject){
+        
+        $("<style type='text/css'> .textBoxObject{ width: " +10 + "px;height: "+10+"px;padding: 0px;margin: " + 10 + "px auto;background: blue;position: absolute;opacity: 0.5;left: " +TextBoxObject.left + "px;top:" + TextBoxObject.top + "px; } </style>").appendTo("head");
+            $("<div/>").addClass("textBoxObject").appendTo("body");
         
     }
     
-    }
+    
     
 </script>
 
